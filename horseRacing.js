@@ -28,14 +28,13 @@ function draw(){
 	//bet()
 	if(raceBool == true){
 		race()
+		//temporary watermark
+		textSize(20)
+		fill(0)
+		text('you are the red square. mash the spacebar for hopeful victory.', 5, windowHeight-10)
 	}
 	
 	winCheck()
-
-	//temporary watermark
-	textSize(20)
-	fill(0)
-	text('proof of concept', 5, windowHeight-10)
 
 }
 
@@ -67,9 +66,9 @@ function race(){
 	background(180)
 
 	let rsquareSpeed = random(5)
-	let gsquareSpeed = random(5)
-	let bsquareSpeed = random(5)
-	let ysquareSpeed = random(5)
+	let gsquareSpeed = random(4,8)
+	let bsquareSpeed = random(4,8)
+	let ysquareSpeed = random(4,8)
 
 
 	//ignore the following!
@@ -139,6 +138,10 @@ function race(){
 	bsquarePos = bsquarePos + bsquareSpeed
 	ysquarePos = ysquarePos + ysquareSpeed
 
+	if(keyCode === 32){
+		rsquarePos = rsquarePos+4
+	}
+
 	if(rsquarePos >= windowWidth-200){
 		redWinBool = true
 		raceBool = false
@@ -150,7 +153,7 @@ function race(){
 		raceBool = false
 	}if(ysquarePos >= windowWidth-200){
 		yellowWinBool = true
-		raceBool = fale
+		raceBool = false
 	}
 }
 
@@ -183,19 +186,8 @@ function yellowWin(){
 }
 
 function winCheck(){
-	//win screens
-	if(redWinBool == true){
-		redWin()
-	}if(greenWinBool == true){
-		greenWin()
-	}if(blueWinBool == true){
-		blueWin()
-	}if(yellowWinBool == true){
-		yellowWin()
-	}
 
 	//tie bugfixes
-
 	if(redWinBool == true && greenWinBool == true){
 		redWin()
 	}if(redWinBool == true && blueWinBool == true){
@@ -209,4 +201,26 @@ function winCheck(){
 	}if(greenWinBool == true && yellowWinBool == true){
 		greenWin()
 	}
+
+	//win screens
+
+	if(redWinBool == true){
+		redWin()
+	}if(greenWinBool == true){
+		greenWin()
+	}if(blueWinBool == true){
+		blueWin()
+	}if(yellowWinBool == true){
+		yellowWin()
+	}
+
+	/*
+	if(key === 'r'){
+		raceBool = true
+		redWinBool = false
+		greenWinBool = false
+		blueWinBool = false
+		yellowWinBool = false
+	}
+	*/
 }
