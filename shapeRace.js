@@ -1,21 +1,39 @@
-//add opening screen for selection later
-
 let squareX = 75
-
-let possibleSpeeds = [2, 3, 4, 5]
 
 let rsquarePos = squareX
 let gsquarePos = squareX
 let bsquarePos = squareX
 let ysquarePos = squareX
 
-let raceBool = true
+let gambleBool = true
+let raceBool = false
 let redWinBool = false
 let greenWinBool = false
 let blueWinBool = false
 let yellowWinBool = false
 
+let betRed = false
+let betGreen = false
+let betBlue = false
+let betYellow = false
 
+
+//REMINDER: win with all and activate a hard mode to get "super wins", and add a third image to be loaded with all of those
+//OTHER REMINDER: upload this how it is for code in progress 2. then add music and above for final.
+let rVictory = false
+let gVictory = false
+let bVictory = false
+let yVictory = false
+
+let reset = false
+
+let thumbsUp
+let allWinner
+
+function preload(){
+	thumbsUp = loadImage('joyful.png')
+	allWinner = loadImage('wowie.png')
+}
 
 function setup(){
 	createCanvas(windowWidth, windowHeight)
@@ -25,16 +43,34 @@ function setup(){
 }
 
 function draw(){
-	//bet()
+	if(gambleBool == true){
+		bet()
+	}
 	if(raceBool == true){
 		race()
-		//temporary watermark
-		textSize(20)
-		fill(0)
-		text('you are the red square. mash the spacebar for hopeful victory.', 5, windowHeight-10)
 	}
 	
+
 	winCheck()
+
+	if(key === 'r'){
+		gambleBool = true
+		raceBool = false
+		redWinBool = false
+		greenWinBool = false
+		blueWinBool = false
+		yellowWinBool = false
+
+		rsquarePos = squareX
+		gsquarePos = squareX
+		bsquarePos = squareX
+		ysquarePos = squareX
+		betRed = false
+		betGreen = false
+		betBlue = false
+		betYellow = false
+	}
+	
 
 }
 
@@ -42,7 +78,35 @@ function bet(){
 	background(0)
 	fill(255)
 	textSize(40)
-	text('Place your bets!', windowWidth/2-150, windowHeight/2-200)
+	text('Welcome to the Great Shape Race!', windowWidth/2-325, 60)
+	text('Click on a square to bet on that racer!', 420, 140)
+
+	if(reset == true){
+		text('Please press spacebar before selecting a racer.', 350, 220)
+	}else{
+		text('The race will start IMMEDIATELY upon betting.', 350, 220)
+	}
+
+
+	if(rVictory == true && gVictory == true && bVictory == true && yVictory == true){
+		image(allWinner, windowWidth/2, windowHeight/2, 300,300)
+	}else{
+		image(thumbsUp, windowWidth/2, windowHeight/2, 300,300)
+	}
+
+	textSize(30)
+	if(rVictory == true){
+		text('Winner!', 250, 545)
+	}if(gVictory == true){
+		text('Winner!', 550, 545)
+	}if(bVictory == true){
+		text('Winner!', 850, 545)
+	}if(yVictory == true){
+		text('Winner!', 1150, 545)
+	}
+
+	textSize(20)
+	text('When in a race, rapidly click the spacebar to move your racer faster.', 450, windowHeight-20)
 
 	//red square
 	fill(255, 0, 0)
@@ -60,42 +124,57 @@ function bet(){
 	fill(255, 255, 0)
 	square(1200, 600, 100)
 
+	if(mouseIsPressed){
+		if(dist(mouseX,mouseY, 300,600) < 100){
+			raceBool = true
+			betRed = true
+			gambleBool = false
+		}if(dist(mouseX,mouseY, 600,600) < 100){
+			raceBool = true
+			betGreen = true
+			gambleBool = false
+		}if(dist(mouseX,mouseY, 900,600) < 100){
+			raceBool = true
+			betBlue = true
+			gambleBool = false
+		}if(dist(mouseX,mouseY, 1200,600) < 100){
+			raceBool = true
+			betYellow = true
+			gambleBool = false
+		}
+	}
+
 }
 
 function race(){
 	background(180)
 
-	let rsquareSpeed = random(5)
-	let gsquareSpeed = random(4,8)
-	let bsquareSpeed = random(4,8)
-	let ysquareSpeed = random(4,8)
+	let rsquareSpeed
+	let gsquareSpeed
+	let bsquareSpeed
+	let ysquareSpeed
 
-
-	//ignore the following!
-
-	/*
-
-	let x = 0
-	for(let i = 0; i < possibleSpeeds.length; i+0){
-		if(x == 0){
-			rsquareSpeed = possibleSpeeds[random(0,3)]
-			possibleSpeeds.splice(rsquareSpeed)
-			x++
-		}if(x == 1){
-			gsquareSpeed = possibleSpeeds[random(0,2)]
-			possibleSpeeds.splice(gsquareSpeed)
-			x++
-		}if(x == 2){
-			bsquareSpeed = possibleSpeeds[random(0,1)]
-			possibleSpeeds.splice(bsquareSpeed)
-			x++
-		}else{
-			ysquareSpeed = possibleSpeeds[0]
-			possibleSpeeds.splice(ysquareSpeed)
-			x++
-		}
+	if(betRed == true){
+		rsquareSpeed = 0
+		gsquareSpeed = random(6,7)
+		bsquareSpeed = random(6,7)
+		ysquareSpeed = random(6,7)
+	}if(betGreen == true){
+		rsquareSpeed = random(6,7)
+		gsquareSpeed = 0
+		bsquareSpeed = random(6,7)
+		ysquareSpeed = random(6,7)
+	}if(betBlue == true){
+		rsquareSpeed = random(6,7)
+		gsquareSpeed = random(6,7)
+		bsquareSpeed = 0
+		ysquareSpeed = random(6,7)
+	}if(betYellow == true){
+		rsquareSpeed = random(6,7)
+		gsquareSpeed = random(6,7)
+		bsquareSpeed = random(6,7)
+		ysquareSpeed = 0
 	}
-	*/
 
 	let y1 = 50
 	let y2 = 50
@@ -133,14 +212,13 @@ function race(){
 	fill(255, 255, 0)
 	square(ysquarePos, 550, 100)
 
+
 	rsquarePos = rsquarePos + rsquareSpeed
 	gsquarePos = gsquarePos + gsquareSpeed
 	bsquarePos = bsquarePos + bsquareSpeed
 	ysquarePos = ysquarePos + ysquareSpeed
 
-	if(keyCode === 32){
-		rsquarePos = rsquarePos+4
-	}
+	keyPressed()
 
 	if(rsquarePos >= windowWidth-200){
 		redWinBool = true
@@ -161,28 +239,60 @@ function redWin(){
 	background(255, 0, 0)
 	textSize(40)
 	fill(0)
-	text('Red wins!', windowWidth/2-100, windowHeight/2)
+	if(betRed == true){
+		text('You won as Red!', windowWidth/2-150, windowHeight/2)
+		//rVictory = true
+	}else{
+		text('Red wins!', windowWidth/2-100, windowHeight/2)
+	}
+
+	text('Press R to restart.', windowWidth/2-150, 600 )
+	reset = true
 }
 
 function greenWin(){
 	background(0, 255, 0)
 	textSize(40)
 	fill(0)
-	text('Green wins!', windowWidth/2-100, windowHeight/2)
+	if(betGreen == true){
+		text('You won as Green!', windowWidth/2-150, windowHeight/2)
+		//gVictory = true
+	}else{
+		text('Green wins!', windowWidth/2-100, windowHeight/2)
+	}
+
+	text('Press R to restart.', windowWidth/2-150, 600 )
+	reset = true
 }
 
 function blueWin(){
 	background(0, 0, 255)
 	textSize(40)
 	fill(0)
-	text('Blue wins!', windowWidth/2-100, windowHeight/2)
+	if(betBlue == true){
+		text('You won as Blue!', windowWidth/2-150, windowHeight/2)
+		//bVictory = true
+	}else{
+		text('Blue wins!', windowWidth/2-100, windowHeight/2)
+	}
+
+	text('Press R to restart.', windowWidth/2-150, 600 )
+	reset = true
 }
 
 function yellowWin(){
 	background(255, 255, 0)
 	fill(0)
 	textSize(40)
-	text('Yellow wins!', windowWidth/2-100, windowHeight/2)
+	if(betYellow == true){
+		text('You won as Yellow!', windowWidth/2-150, windowHeight/2)
+		//yVictory = true
+	}else{
+		text('Yellow wins!', windowWidth/2-100, windowHeight/2)
+	}
+
+	text('Press R to restart.', windowWidth/2-150, 600 )
+	reset = true
 }
 
 function winCheck(){
@@ -213,14 +323,19 @@ function winCheck(){
 	}if(yellowWinBool == true){
 		yellowWin()
 	}
+	
+}
 
-	/*
-	if(key === 'r'){
-		raceBool = true
-		redWinBool = false
-		greenWinBool = false
-		blueWinBool = false
-		yellowWinBool = false
+function keyPressed(){
+	if(keyCode === 32){
+		if(betRed == true){
+			rsquarePos = rsquarePos+6
+		}if(betGreen == true){
+			gsquarePos = gsquarePos+6
+		}if(betBlue == true){
+			bsquarePos = bsquarePos+6
+		}if(betYellow == true){
+			ysquarePos = ysquarePos+6
+		}
 	}
-	*/
 }
