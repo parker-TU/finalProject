@@ -5,6 +5,14 @@ let gsquarePos = squareX
 let bsquarePos = squareX
 let ysquarePos = squareX
 
+let rsquareY = 100
+let gsquareY = 250
+let bsquareY = 400
+let ysquareY = 550
+
+let jitter = 1
+let soundCount = 0
+
 let gambleBool = true
 let raceBool = false
 let redWinBool = false
@@ -41,16 +49,29 @@ let thumbsUp
 let allWinner
 let ultimateWin
 
+
+let menuSong
+let raceSong
+let winSong
+
+let amplitude
+
 function preload(){
 	thumbsUp = loadImage('joyful.png')
 	allWinner = loadImage('wowie.png')
 	ultimateWin = loadImage('star.png')
+
+	menuSong = loadSound('smallerFurElise.mp3')
+	raceSong = loadSound('odeToJoy.ogg')
+	winSong = loadSound('charge.mp3')
 }
 
 function setup(){
 	createCanvas(windowWidth, windowHeight)
 	rectMode(CENTER)
 	imageMode(CENTER)
+
+	amplitude = new p5.Amplitude()
 	
 }
 
@@ -87,9 +108,15 @@ function draw(){
 }
 
 function bet(){
+	playMenu()
 	background(0)
 	fill(255)
 	textSize(40)
+
+	rsquareY = 100
+	gsquareY = 250
+	bsquareY = 400
+	ysquareY = 550
 
 	if(bigWinner == false && ultWinner == false){
 		image(thumbsUp, windowWidth/2, windowHeight/2, 300,300)
@@ -190,8 +217,42 @@ function bet(){
 }
 
 function race(){
-	background(180)
 
+	playRace()
+	//bg
+	background(255, 186, 117)
+	
+	/*
+	noStroke()
+	fill(245, 117, 255)
+	triangle(316,420, 373,300, 492,421)
+	triangle(201,190, 251,271, 305,200)
+	triangle(754,590, 657,690, 601,644)
+	*/
+
+
+	stroke(0)
+	strokeWeight(10)
+	line(squareX,675, windowWidth-400,675)
+	line(windowWidth-450,650, windowWidth-400,675)
+	line(windowWidth-450,700, windowWidth-400,675)
+
+	strokeWeight(0)
+	fill(0)
+	textSize(50)
+	let textX1 = 100
+	let textX2 = 100
+	for(let i = 0; i < 20; i++){
+		if(i<10){
+			text("go!", textX1, 650)
+			textX1 = textX1+100
+		}else{
+			text("go!", textX2, 730)
+			textX2 = textX2+100
+		}
+	}
+
+	strokeWeight(1)
 	let s1
 	let s2
 
@@ -230,6 +291,12 @@ function race(){
 		ysquareSpeed = 0
 	}
 
+	line(0,100, windowWidth,100)
+	line(0,250, windowWidth,250)
+	line(0,400, windowWidth,400)
+	line(0,550, windowWidth,550)
+
+
 	let y1 = 50
 	let y2 = 50
 
@@ -250,27 +317,44 @@ function race(){
 		}
 	}
 
+
 	//red square
 	fill(255, 0, 0)
-	square(rsquarePos, 100, 100)
+	square(rsquarePos, rsquareY, 100)
 
 	//green square
 	fill(0, 255, 0)
-	square(gsquarePos, 250, 100)
+	square(gsquarePos, gsquareY, 100)
 
 	//blue square
 	fill(0, 0, 255)
-	square(bsquarePos, 400, 100)
+	square(bsquarePos, bsquareY, 100)
 
 	//yellow square
 	fill(255, 255, 0)
-	square(ysquarePos, 550, 100)
+	square(ysquarePos, ysquareY, 100)
 
 
 	rsquarePos = rsquarePos + rsquareSpeed
 	gsquarePos = gsquarePos + gsquareSpeed
 	bsquarePos = bsquarePos + bsquareSpeed
 	ysquarePos = ysquarePos + ysquareSpeed
+
+	if(bigWinner == true || ultWinner == true){
+		if(jitter % 2 == 0){
+			rsquareY = rsquareY+5
+			gsquareY = gsquareY-5
+			bsquareY = bsquareY+5
+			ysquareY = ysquareY-5
+		}if(jitter % 2 == 1){
+			rsquareY = rsquareY-5
+			gsquareY = gsquareY+5
+			bsquareY = bsquareY-5
+			ysquareY = ysquareY+5
+		}
+	}
+
+	jitter++
 
 	keyPressed()
 
@@ -290,6 +374,8 @@ function race(){
 }
 
 function redWin(){
+	playWin()
+
 	background(255, 0, 0)
 	textSize(40)
 	fill(0)
@@ -308,6 +394,8 @@ function redWin(){
 }
 
 function greenWin(){
+	playWin()
+
 	background(0, 255, 0)
 	textSize(40)
 	fill(0)
@@ -326,6 +414,8 @@ function greenWin(){
 }
 
 function blueWin(){
+	playWin()
+
 	background(0, 0, 255)
 	textSize(40)
 	fill(0)
@@ -344,6 +434,8 @@ function blueWin(){
 }
 
 function yellowWin(){
+	playWin()
+
 	background(255, 255, 0)
 	fill(0)
 	textSize(40)
@@ -408,4 +500,31 @@ function keyPressed(){
 			ysquarePos = ysquarePos+3
 		}
 	}
+}
+
+
+function playMenu(){
+	winSong.stop()
+	raceSong.stop()
+	if(!menuSong.isPlaying()){
+		menuSong.loop() //loops given sound file
+	}
+	soundCount = 0
+}
+
+function playRace(){
+	menuSong.stop()
+	if(!raceSong.isPlaying()){
+		raceSong.loop() //loops given sound file
+	}
+}
+
+
+function playWin(){
+	raceSong.stop()
+	if(soundCount == 0){
+		winSong.play()
+		winSong.setVolume(5.0)
+	}
+	soundCount++
 }
