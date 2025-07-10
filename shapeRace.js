@@ -486,7 +486,7 @@ function winCheck(){
 
 function keyPressed(){
 	//change keycode back to 38 for testing (up arrow)
-	if(keyCode === 38){
+	if(keyCode === 32){
 		if(betRed == true){
 			rsquarePos = rsquarePos+3
 		}
